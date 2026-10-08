@@ -38,11 +38,18 @@ ponerle encima a la persona.
 
 ### Cómo está armado, y por qué así
 
-- **La llave es del visitante, no tuya.** Él saca la suya gratis en
+- **La llave es del visitante, no tuya.** Él saca la suya en
   [Google AI Studio](https://aistudio.google.com/apikey), la pega una vez y se
   queda guardada en *su* teléfono. Va derecho de su navegador a Google: no pasa
   por Supabase ni por ningún servidor nuestro. Por eso nadie te puede vaciar la
   cartera generando imágenes.
+- **Ojo: esto no es gratis.** Crear la llave no cuesta, pero los modelos de
+  imagen de Google **ya no tienen tier gratis**: cobran unos 6.7 centavos de
+  dólar (~$1.30 MXN) por imagen y piden tarjeta en la cuenta. En la práctica
+  eso significa que el probador es una herramienta **para ti** (pones tu llave
+  en tu teléfono y generas fotos para Instagram y WhatsApp), no algo que un
+  cliente cualquiera vaya a usar: nadie va a dar de alta una tarjeta en Google
+  Cloud para probarse unos tenis.
 - **La foto de la persona no se guarda en ningún lado.** Vive en la memoria de
   la pestaña y se borra al cerrarla. No se sube a la base, no se manda a ningún
   otro servicio. El botón "Borrar mis datos" tira también la llave.

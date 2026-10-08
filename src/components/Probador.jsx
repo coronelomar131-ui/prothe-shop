@@ -128,7 +128,8 @@ const Probador = () => {
                             <h4>Tu llave de Google</h4>
                             <p className="prob-dice">
                                 El probador usa la IA de Google y cada quien pone la suya.
-                                Sacarla es gratis y toma un minuto.
+                                Crearla no cuesta, pero Google cobra la imagen: como
+                                <strong> $1.30 por prueba</strong>, y pide tarjeta en la cuenta.
                             </p>
                             <a className="prob-liga" href="https://aistudio.google.com/apikey"
                                 target="_blank" rel="noreferrer">
