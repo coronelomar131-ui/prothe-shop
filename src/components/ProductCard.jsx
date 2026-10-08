@@ -1,19 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { ShopContext } from '../context/shop-context';
-import { ProbadorContext } from '../context/probador-context';
 import { config } from '../config';
 import { waLink } from '../lib/whatsapp';
 import ProductPhoto from './ProductPhoto';
-
-// La percha del probador. Solo sale en los pares que tienen foto, porque sin
-// foto del par no hay nada que ponerle encima a la persona.
-const PerchaIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-        strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M12 7a2 2 0 1 1 2-2" />
-        <path d="M12 7v2.3L3.7 15.4a1.2 1.2 0 0 0 .7 2.2h15.2a1.2 1.2 0 0 0 .7-2.2L12 9.3" />
-    </svg>
-);
 
 const WhatsAppIcon = () => (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -23,7 +12,6 @@ const WhatsAppIcon = () => (
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useContext(ShopContext);
-    const { abrir: abrirProbador } = useContext(ProbadorContext);
     const [size, setSize] = useState(null);
 
     const soldOut = product.status === 'agotado';
@@ -50,17 +38,6 @@ const ProductCard = ({ product }) => {
                     {product.status === 'nuevo' && <span className="badge badge-new">Nuevo</span>}
                     {soldOut && <span className="badge badge-out">Agotado</span>}
                 </div>
-                {product.hasPhoto && (
-                    <button
-                        className="percha"
-                        onClick={() => abrirProbador(product)}
-                        title="Pruébatelos"
-                        aria-label={`Probarte los ${product.brand} ${product.name}`}
-                    >
-                        <PerchaIcon />
-                        <span>Pruébatelos</span>
-                    </button>
-                )}
                 <ProductPhoto product={product} />
             </div>
 

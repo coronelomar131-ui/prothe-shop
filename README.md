@@ -23,50 +23,6 @@ Tipografía Big Shoulders Display + Barlow.
   completo con total por WhatsApp.
 - **Fotos comprimidas** al subirlas (máx. 1200 px, JPEG) para que la tienda no
   pese; cada tarjeta pide su foto solo cuando aparece en pantalla.
-- **El probador.** El cliente sube su foto, escoge un par y una IA se lo pone
-  encima para que vea cómo le queda antes de comprar. Ver abajo.
-
-## El probador
-
-El botón de la **percha** en cada tarjeta (y el botón flotante) abren un panel
-donde el cliente sube su foto, escoge un par y la IA de Google le devuelve la
-misma foto con esos tenis puestos. Puede probarse varios y compararlos, y de
-ahí mandarte la imagen por WhatsApp o echar el par al carrito.
-
-Solo aparece en los pares **que tienen foto**: sin foto del par no hay nada que
-ponerle encima a la persona.
-
-### Cómo está armado, y por qué así
-
-- **La llave es del visitante, no tuya.** Él saca la suya en
-  [Google AI Studio](https://aistudio.google.com/apikey), la pega una vez y se
-  queda guardada en *su* teléfono. Va derecho de su navegador a Google: no pasa
-  por Supabase ni por ningún servidor nuestro. Por eso nadie te puede vaciar la
-  cartera generando imágenes.
-- **Ojo: esto no es gratis.** Crear la llave no cuesta, pero los modelos de
-  imagen de Google **ya no tienen tier gratis**: cobran unos 6.7 centavos de
-  dólar (~$1.30 MXN) por imagen y piden tarjeta en la cuenta. En la práctica
-  eso significa que el probador es una herramienta **para ti** (pones tu llave
-  en tu teléfono y generas fotos para Instagram y WhatsApp), no algo que un
-  cliente cualquiera vaya a usar: nadie va a dar de alta una tarjeta en Google
-  Cloud para probarse unos tenis.
-- **La foto de la persona no se guarda en ningún lado.** Vive en la memoria de
-  la pestaña y se borra al cerrarla. No se sube a la base, no se manda a ningún
-  otro servicio. El botón "Borrar mis datos" tira también la llave.
-- **Las fotos se achican antes de mandarse** (1024 px la persona, 768 px el par,
-  JPEG 88%). Una foto de celular pesa 5 MB y son puros píxeles de desperdicio
-  que además se cobran.
-- **El modelo se escoge solo.** Al guardar la llave se le pregunta a Google qué
-  modelos tiene disponibles y se agarra el mejor de imágenes. Si Google retira
-  uno, la tienda se pasa sola al siguiente sin tocar código. La lista de
-  preferencia está arriba de `src/lib/probador.js`.
-
-### Si algún día quieres pagarlo tú
-
-Para que los clientes no tengan que poner llave, la llave tendría que ser tuya
-— y desde el navegador eso es regalarla. Eso ya no va en `src/lib/probador.js`:
-va en una función de servidor con la llave guardada como secreto y un freno por
-IP, porque si no, cualquiera puede dejarte la cuenta en ceros en una tarde.
 
 ## Panel de administración
 

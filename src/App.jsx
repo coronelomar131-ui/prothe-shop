@@ -6,8 +6,6 @@ import Marquee from './components/Marquee';
 import BrandFilter from './components/BrandFilter';
 import ProductGrid from './components/ProductGrid';
 import CartDrawer from './components/CartDrawer';
-import Probador from './components/Probador';
-import BotonProbador from './components/BotonProbador';
 import HowTo from './components/HowTo';
 import Newsletter from './components/Newsletter';
 import AdminLogin from './components/AdminLogin';
@@ -93,8 +91,6 @@ function StoreFront() {
             </footer>
 
             <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
-            <BotonProbador />
-            <Probador />
         </>
     );
 }
