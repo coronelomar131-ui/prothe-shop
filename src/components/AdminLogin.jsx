@@ -1,74 +1,109 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { adminIsClaimed, adminClaim, adminLogin } from '../lib/shopApi';
 
 const AdminLogin = () => {
-    const [password, setPassword] = useState('');
+    const [claimed, setClaimed] = useState(null); // null = todavía revisando
+    const [pass, setPass] = useState('');
+    const [pass2, setPass2] = useState('');
     const [error, setError] = useState('');
+    const [busy, setBusy] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const [sinConexion, setSinConexion] = useState(false);
+
+    const revisar = () => {
+        setError('');
+        setSinConexion(false);
+        setClaimed(null);
+        adminIsClaimed()
+            .then(setClaimed)
+            .catch((err) => {
+                setError(err?.message || 'No hay conexión con la tienda');
+                setSinConexion(true);
+            });
+    };
+
+    useEffect(revisar, []);
+
+    const entrar = async (e) => {
         e.preventDefault();
-        if (password === '123') {
-            localStorage.setItem('isAdmin', 'true');
+        setError('');
+        setBusy(true);
+        try {
+            if (claimed === false) {
+                if (pass !== pass2) throw new Error('Las dos claves no son iguales');
+                await adminClaim(pass);
+            } else {
+                const ok = await adminLogin(pass);
+                if (!ok) throw new Error('Clave incorrecta');
+            }
+            // Se guarda en la pestaña, no en el disco: al cerrarla se borra.
+            sessionStorage.setItem('protheAdminPass', pass);
             navigate('/admin/dashboard');
-        } else {
-            setError('Contraseña incorrecta');
+        } catch (err) {
+            setError(err?.message || 'No se pudo entrar');
+        } finally {
+            setBusy(false);
         }
     };
 
+    const primeraVez = claimed === false;
+
     return (
-        <div style={styles.container}>
-            <form className="glass" onSubmit={handleLogin} style={styles.form}>
-                <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Acceso Empleados</h2>
+        <div className="login-page">
+            <form className="login-card" onSubmit={entrar}>
+                <h2>Prothe <em>Shops</em></h2>
+                <p>{primeraVez ? 'Crea tu clave' : 'Acceso empleados'}</p>
 
-                {error && <p style={styles.error}>{error}</p>}
+                {primeraVez && (
+                    <p className="login-note">
+                        Es la primera vez que entras. La clave que escribas aquí
+                        será la tuya: nadie más la conoce, ni queda escrita en el código.
+                    </p>
+                )}
 
+                {error && <div className="login-error">{error}</div>}
+
+                {sinConexion ? (
+                    <button type="button" className="btn-primary" style={{ width: '100%' }} onClick={revisar}>
+                        Reintentar
+                    </button>
+                ) : (
+                  <>
                 <input
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Contraseña"
-                    style={styles.input}
+                    value={pass}
+                    onChange={(e) => setPass(e.target.value)}
+                    placeholder={primeraVez ? 'Tu clave nueva (mínimo 6)' : 'Clave'}
+                    autoComplete={primeraVez ? 'new-password' : 'current-password'}
+                    disabled={claimed === null || busy}
                 />
 
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                    Entrar
+                {primeraVez && (
+                    <input
+                        type="password"
+                        value={pass2}
+                        onChange={(e) => setPass2(e.target.value)}
+                        placeholder="Repite la clave"
+                        autoComplete="new-password"
+                        disabled={busy}
+                    />
+                )}
+
+                <button
+                    type="submit"
+                    className="btn-primary"
+                    style={{ width: '100%' }}
+                    disabled={claimed === null || busy}
+                >
+                    {claimed === null ? 'Conectando…' : busy ? 'Un momento…' : (primeraVez ? 'Guardar clave' : 'Entrar')}
                 </button>
+                  </>
+                )}
             </form>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        minHeight: '80vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-    },
-    form: {
-        padding: '3rem',
-        borderRadius: '16px',
-        width: '100%',
-        maxWidth: '400px',
-    },
-    input: {
-        width: '100%',
-        padding: '1rem',
-        borderRadius: '8px',
-        border: '1px solid var(--glass-border)',
-        background: 'rgba(255, 255, 255, 0.05)',
-        color: 'var(--text-main)',
-        fontSize: '1.1rem',
-        marginBottom: '1rem',
-    },
-    error: {
-        color: 'var(--primary-color)',
-        marginBottom: '1rem',
-        textAlign: 'center',
-        fontSize: '0.9rem',
-    }
 };
 
 export default AdminLogin;
